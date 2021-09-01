@@ -1,0 +1,410 @@
+swagger: "2.0"
+info:
+  description: This is the swagger file that goes with our server code
+  version: "1.0.0"
+  title: Swagger REST Article
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+
+basePath: "/api"
+
+# Paths supported by the server application
+paths:
+  /users:
+    get:
+      operationId: "users.read_all"
+      tags:
+        - "Users"
+      summary: "The users data structure supported by the server application"
+      description: "Read the list of users"
+      responses:
+        200:
+          description: "Successful read user list operation"
+          schema:
+            type: "array"
+            items:
+              properties:
+                fname:
+                  type: "string"
+                lname:
+                  type: "string"
+                timestamp:
+                  type: "string"
+    post:
+      operationId: users.create
+      tags:
+        - Users
+      summary: Create a user
+      description: Create a new user
+      parameters:
+        - name: user
+          in: body
+          description: User to create
+          required: True
+          schema:
+            type: object
+            properties:
+              fname:
+                type: string
+                description: First name of user to create
+              lname:
+                type: string
+                description: Last name of user to create
+      responses:
+        201:
+          description: Successfully created user
+          schema:
+            properties:
+              user_id:
+                type: integer
+                description: Id of the user
+              fname:
+
+
+
+
+
+
+
+
+                type: string
+                description: First name of the user
+              lname:
+                type: string
+                description: Last name of the user
+              timestamp:
+                type: string
+                description: Creation/Update timestamp of the user record
+  /users/{user_id}:
+    get:
+      operationId: users.read_one
+      tags:
+        - Users
+      summary: Read one user
+      description: Read one user
+      parameters:
+        - name: user_id
+          in: path
+          description: Id of the user to get
+          type: integer
+          required: True
+      responses:
+        200:
+          description: Successfully read user from users data operation
+          schema:
+            type: object
+            properties:
+              user_id:
+                type: string
+                description: Id of the user
+              fname:
+                type: string
+                description: First name of the user
+              lname:
+                type: string
+                description: Last name of the user
+              timestamp:
+                type: string
+                description: Creation/Update timestamp of the user record
+              visits:
+                type: array
+                items:
+                  properties:
+                    user_id:
+                      type: integer
+                      description: Id of user this visit is associated with
+                    visit_id:
+                      type: integer
+                      description: Id of this visit
+                    instructions:
+                      type: string
+                      description: instructions of this visit
+                    timestamp:
+                      type: string
+                      description: Create/Update timestamp of this visit
+    put:
+      operationId: users.update
+      tags:
+        - Users
+      summary: Update a user
+      description: Update a user
+      parameters:
+        - name: user_id
+          in: path
+          description: Id the user to update
+          type: integer
+          required: True
+        - name: user
+          in: body
+          schema:
+            type: object
+            properties:
+              fname:
+                type: string
+                description: First name of the user
+              lname:
+                type: string
+                description: Last name of the user
+      responses:
+        200:
+          description: Successfully updated user
+          schema:
+            properties:
+              user_id:
+                type: integer
+                description: Id of the user in the database
+              fname:
+                type: string
+                description: First name of the user
+              lname:
+                type: string
+                description: Last name of the user
+              timestamp:
+                type: string
+                description: Creation/Update timestamp of the user record
+    delete:
+      operationId: users.delete
+      tags:
+        - Users
+      summary: Delete a user from the users list
+      description: Delete a user
+      parameters:
+        - name: user_id
+          in: path
+          type: integer
+          description: Id of the user to delete
+          required: true
+      responses:
+        200:
+          description: Successfully deleted a user
+
+  /visits:
+    get:
+      operationId: visits.read_all
+      tags:
+        - Visits
+      summary: Read the entire set of visits for all users, sorted by timestamp
+      description: Read the entire set of visits for all users, sorted by timestamp
+      responses:
+        200:
+          description: Successfully read visits for all users operation
+          schema:
+            type: array
+            items:
+              properties:
+                visit_id:
+                  type: integer
+                  description: Id of the visit
+                instructions:
+                  type: string
+                  description: Content of the visit
+                start_date:
+                  type: string
+                  description: Start Date(DateTime) of the visit to create
+                end_date:
+                  type: string
+                  description: End Date(DateTime) of the visit to create
+                timestamp:
+                  type: string
+                  description: Create/Update timestamp of the visit
+                user:
+                  type: object
+                  properties:
+                    user_id:
+                      type: integer
+                      description: Id of associated user
+                    fname:
+                      type: string
+                      description: Frist name of associated user
+                    lname:
+                      type: string
+                      description: Last name of associated user
+                    timestamp:
+                      type: string
+                      description: Create/Update timestamp of associated user
+
+  /users/visits/{visit_id}:
+    get:
+      operationId: visits.read_detail
+      tags:
+        - Visits
+      summary: Read this detail/specific visit for this visi_id
+      description: Read this detail/specific visit identified by this visi_id
+      parameters:
+        - name: visit_id
+          in: path
+          description: Id of user associated with visit
+          type: integer
+          required: True
+      responses:
+        201:
+          description: Successfully read a visit
+          schema:
+            type: object
+            properties:
+              user_id:
+                type: integer
+                description: Id of the user associated with the visit
+              visit_id:
+                type: integer
+                description: Id of the created visit
+              instructions:
+                type: string
+                description: Text instructions of the visit
+              timestamp:
+                type: string
+                description: Creation/Update timestamp of the user record
+          
+
+
+  /users/{user_id}/visits:
+    post:
+      operationId: visits.create
+      tags:
+        - Visits
+      summary: Create a visit associated with a user
+      description: Create a visit associated with a user
+      parameters:
+        - name: user_id
+          in: path
+          description: Id of user associated with visit
+          type: integer
+          required: True
+        - name: visit
+          in: body
+          description: Text instructions of the visit to create
+          required: True
+          schema:
+            type: object
+            properties:
+              instructions:
+                type: string
+                description: Text of the visit to create
+              start_date:
+                type: string
+                description: Start Date(DateTime) of the visit to create
+              end_date:
+                type: string
+                description: End Date(DateTime) of the visit to create
+      responses:
+        201:
+          description: Successfully created a visit
+          schema:
+            properties:
+              user_id:
+                type: integer
+                description: Id of the user associated with the visit
+              visit_id:
+                type: integer
+                description: Id of the created visit
+              instructions:
+                type: string
+                description: Text instructions of the visit
+              timestamp:
+                type: string
+                description: Creation/Update timestamp of the user record
+
+  /users/{user_id}/visits/{visit_id}:
+    get:
+      operationId: visits.read_one
+      tags:
+        - Visits
+      summary: Read a particular visit associated with a user
+      description: Read a particular visit associated with a user
+      parameters:
+        - name: user_id
+          in: path
+          description: Id of user associated with visit
+          type: integer
+          required: True
+        - name: visit_id
+          in: path
+          description: Id of visit
+          type: integer
+          required: True
+      responses:
+        200:
+          description: Successfully read visit for a user
+          schema:
+            type: object
+            properties:
+              visit_id:
+                type: integer
+                description: Id of the visit
+              user_id:
+                type: integer
+                description: Id of the user visit associated with
+              instructions:
+                type: string
+                description: Text instructions of the visit
+              timestamp:
+                type: string
+                description: Creation/Update timestamp of the visit record
+
+    put:
+      operationId: visits.update
+      tags:
+        - Visits
+      summary: Update a visit associated with a user
+      description: Update a visit associated with a user
+      parameters:
+        - name: user_id
+          in: path
+          description: Id the user to update
+          type: integer
+          required: True
+        - name: visit_id
+          in: path
+          description: Id of the visit associated with a user
+          type: integer
+          required: True
+        - name: visit
+          in: body
+          schema:
+            type: object
+            properties:
+              instructions:
+                type: string
+                description: Text instructions of the visit to updated
+      responses:
+        200:
+          description: Successfully updated visit
+          schema:
+            properties:
+              visit_id:
+                type: string
+                description: Id of the visit associated with a user
+              user_id:
+                type: integer
+                description: Id of the user in the database
+              instructions:
+                type: string
+                description: Text instructions of the updated visit
+              timestamp:
+                type: string
+                description: Creation/Update timestamp of the visit record
+
+    delete:
+      operationId: visits.delete
+      tags:
+        - Visits
+      summary: Delete a visit associated with a user
+      description: Delete a visit associated with a user
+      parameters:
+        - name: user_id
+          in: path
+          description: Id of user associated with visit
+          type: integer
+          required: True
+        - name: visit_id
+          in: path
+          description: Id of visit
+          type: integer
+          required: True
+      responses:
+        200:
+          description: Successfully deleted a visit
+
+
