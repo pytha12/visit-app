@@ -36,25 +36,26 @@ def users(user_id=""):
     This function just responds to the browser URL
     localhost:5000/user
 
-    :return:        the rendered template "people.html"
+    :return:        the rendered template "users.html"
     """
-    return render_template("user.html", user_id=user_id)
+    return render_template("users.html", user_id=user_id)
 
 
 
-# Create a URL route to the notes page
+# Create a URL route to the visits page
 @connex_app.route("/users/<int:user_id>")
 @connex_app.route("/users/<int:user_id>/visit")
+@connex_app.route("/users/visits/<int:visit_id>")
 @connex_app.route("/users/<int:user_id>/visit/<int:visit_id>")
 def visits(user_id, visit_id=""):
     """
     This function responds to the browser URL
-    localhost:5000/notes/<person_id>
+    localhost:5000/visits/<user_id>
 
     :param user_id:   Id of the user to show visit for
-    :return:            the rendered template "notes.html"
+    :return:            the rendered template "visits.html"
     """
-    return render_template("notes.html", user_id=user_id, visit_id=visit_id)
+    return render_template("visits.html", user_id=user_id, visit_id=visit_id)
 
 
 if __name__ == "__main__":

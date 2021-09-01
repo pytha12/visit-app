@@ -5,7 +5,7 @@ user data
 
 from flask import make_response, abort
 from config import db
-from models import User, Visit, VisitSchema
+from models import User, Visit, VisitSchema, DetailVisitSchema
 from datetime import datetime, timezone
 
 
@@ -47,6 +47,33 @@ def read_one(user_id, visit_id):
     # Was a visit found?
     if visit is not None:
         visit_schema = VisitSchema()
+        data = visit_schema.dump(visit).data
+        return data
+
+    # Otherwise, nope, didn't find that visit
+    else:
+        abort(404, f"Visit not found for Id: {visit_id}")
+
+
+def read_detail(visit_id):
+    """
+    This function responds to a request for
+    /api/visits/{visit_id}
+    with one matching visit for the associated user
+
+    :param visit_id:         Id of the visit
+    :return:                json string of visit contents
+    """
+    # Query the database for the visit
+    visit = (
+        Visit.query
+        .filter(Visit.visit_id == visit_id)
+        .one_or_none()
+    )
+
+    # Was a visit found?
+    if visit is not None:
+        visit_schema = DetailVisitSchema(many=False, exclude=["visit_id", "timestamp"])
         data = visit_schema.dump(visit).data
         return data
 
