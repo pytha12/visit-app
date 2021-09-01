@@ -45,6 +45,7 @@ def users(user_id=""):
 # Create a URL route to the visits page
 @connex_app.route("/users/<int:user_id>")
 @connex_app.route("/users/<int:user_id>/visit")
+@connex_app.route("/users/visits/<int:visit_id>")
 @connex_app.route("/users/<int:user_id>/visit/<int:visit_id>")
 def visits(user_id, visit_id=""):
     """

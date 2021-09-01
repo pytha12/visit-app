@@ -68,6 +68,17 @@ class UserVisitSchema(ma.ModelSchema):
     timestamp = fields.Str()
 
 
+class DetailVisitSchema(ma.ModelSchema):
+    def __init__(self, **kwargs):
+        super().__init__(strict=True, **kwargs)
+
+    class Meta:
+        model = Visit
+        sqla_session = db.session
+
+    # user = fields.Nested("VisitUserSchema", default=None)
+
+
 class VisitSchema(ma.ModelSchema):
     def __init__(self, **kwargs):
         super().__init__(strict=True, **kwargs)

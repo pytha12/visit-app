@@ -225,6 +225,39 @@ paths:
                       type: string
                       description: Create/Update timestamp of associated user
 
+  /users/visits/{visit_id}:
+    get:
+      operationId: visits.read_detail
+      tags:
+        - Visits
+      summary: Read this detail/specific visit for this visi_id
+      description: Read this detail/specific visit identified by this visi_id
+      parameters:
+        - name: visit_id
+          in: path
+          description: Id of user associated with visit
+          type: integer
+          required: True
+      responses:
+        201:
+          description: Successfully read a visit
+          schema:
+            type: object
+            properties:
+              user_id:
+                type: integer
+                description: Id of the user associated with the visit
+              visit_id:
+                type: integer
+                description: Id of the created visit
+              instructions:
+                type: string
+                description: Text instructions of the visit
+              timestamp:
+                type: string
+                description: Creation/Update timestamp of the user record
+          
+
 
   /users/{user_id}/visits:
     post:
